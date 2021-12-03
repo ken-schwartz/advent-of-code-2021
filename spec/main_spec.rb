@@ -24,6 +24,9 @@ describe '#determine_position' do
   end
 
   it 'returns an x,y coordinate based on the movements' do
-    expect(determine_position(movements)).to eq({ position: 15, depth: 10 })
+    result = determine_position(movements)
+
+    expect(result[:position]).to eq(15)
+    expect(result[:depth]).to eq(60)
   end
 end

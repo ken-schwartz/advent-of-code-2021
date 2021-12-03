@@ -8,13 +8,18 @@ def count_depth_increases(measurements)
 end
 
 def determine_position(movements)
-  movements.each_with_object({ position: 0, depth: 0 }) do |movement, hash|
-    direction, distance = movement.split
+  movements.each_with_object({ position: 0, depth: 0, aim: 0 }) do |movement, hash|
+    direction, dist = movement.split
+    distance = dist.to_i
 
     case direction.to_sym
-    when :forward then hash[:position] += distance.to_i
-    when :down then hash[:depth] += distance.to_i
-    when :up then hash[:depth] -= distance.to_i
+    when :forward
+      hash[:position] += distance
+      hash[:depth] += hash[:aim] * distance
+    when :down
+      hash[:aim] += distance
+    when :up
+      hash[:aim] -= distance
     end
   end
 end
