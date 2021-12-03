@@ -8,8 +8,8 @@ describe '#count_depth_increases' do
     [199, 200, 208, 210, 200, 207, 240, 269, 260, 263]
   end
 
-  it 'counts the number of times the depth increases from the previous measurement' do
-    expect(count_depth_increases(input)).to eq(7)
+  it 'counts the number of times the sliding sum increases from the previous sum' do
+    expect(count_depth_increases(input)).to eq(5)
   end
 end
 
