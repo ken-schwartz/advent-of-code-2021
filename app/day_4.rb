@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'pry'
+require 'pry-nav'
 
 file = File.open('./files/day_4.txt')
 file_data = file.to_a.map(&:split)
@@ -35,7 +36,7 @@ def winner?(board)
   horizontal || vertical
 end
 
-def calculate_sum(board)
+def calculate_unmarked_sum(board)
   board.flatten
        .filter { |elem| !elem[:marked] }
        .reduce(0) { |sum, elem| sum + elem[:value].to_i }
@@ -43,21 +44,29 @@ end
 
 numbers_called = file_data.slice!(0).first.split(',')
 boards = create_boards(file_data)
-score = 0
+winning_boards = []
+winning_score = 0
+losing_score = 0
 
 numbers_called.each do |num|
   boards.each do |board|
+    next if winning_boards.include? board
+
     mark_board!(board, num)
 
-    if winner? board
-      score = calculate_sum(board) * num.to_i
+    if winner?(board) && winning_boards.length.zero?
+      winning_score = calculate_unmarked_sum(board) * num.to_i
+      winning_boards << board
+    elsif winner?(board) && winning_boards.length == boards.length - 1
+      losing_score = calculate_unmarked_sum(board) * num.to_i
       break
+    elsif winner?(board) && !winning_boards.include?(board)
+      winning_boards << board
     end
   end
 
-  break if score.positive?
+  break if winning_score.positive? && losing_score.positive?
 end
 
-p "Part 1 -- Score: #{score}"
-
-# Part 2
+p "Part 1 -- Winning Score: #{winning_score}"
+p "Part 2 -- Losing Score: #{losing_score}"
